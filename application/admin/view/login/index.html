@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台登录</title>
+    <style>
+        body {
+            font-size: 14px;
+        }
+        div {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h3>后台登陆</h3>
+    <form action="{:url('admin/login/login')}" method="post">
+        <div>
+            <label>
+                账号：
+                <input type="text" name="username" value="Arceus" autocomplete="off">
+            </label>
+        </div>
+        <div>
+            <label>
+                密码：
+                <input type="password" name="password" value="Brandon870259" autocomplete="off">
+            </label>
+        </div>
+        <div>
+            <input type="submit" value="进入后台系统">
+        </div>
+    </form>
+</body>
+</html>
