@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新闻列表</title>
+    <style>
+        body {
+            font-size: 14px;
+        }
+        table {
+            width: 1000px;
+            margin: 0 auto;
+        }
+        table tr td{
+            text-align: center;
+        }
+        .nav {
+            text-align: right;
+            padding-right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="{:url('admin/news/create')}">添加新闻</a>
+    </div>
+    <hr>
+    <div>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>标题</th>
+                <th>描述</th>
+                <th>作者</th>
+                <th>内容</th>
+                <th>操作</th>
+            </tr>
+            {foreach $data as $v}
+            <tr>
+                <td>{$v.id}</td>
+                <td>{$v.title}</td>
+                <td>{$v.desn}</td>
+                <td>{$v.author}</td>
+                <td>{$v.body}</td>
+                <td>
+                    <a href="">编辑</a>
+                    <a onclick="del('{:url('admin/news/del',['id' => $v.id])}'),this">删除</a>
+                </td>
+            </tr>
+            {/foreach}
+        </table>
+    </div>
+
+    <form action="" method="post" id="faker" style="display: none">
+        <input type="hidden" name="_method" value="DELETE">
+    </form>
+</body>
+</html>
+
+<script src="https://cdn.bootcss.com/jquery/3.5.0/jquery.min.js"></script>
+<script>
+    function del(url, obj) {
+        let bool = confirm('您真的要删除此条新闻记录吗？');
+        // console.log(bool);
+        if(bool) {
+            $.get(url, function (ret) {
+                // console.log(ret);
+                if(ret.status == 0){
+                    $(obj).parents('tr').remove();
+                    // alert(ret.msg);
+                }
+            },'json')
+        }
+    }
+
+    // $(function(){
+    //     // 给删除按钮绑定点击事件
+    //     $('.del').click(function(){
+    //         if(confirm('确认要删除吗？')){
+    //             var id = $(this).attr('data');
+    //             var url = 'http://' + id;
+    //             $('#faker').attr('action',url);
+    //             // 提交请求
+    //             $('#faker').submit();
+    //         }
+    //     });
+    // });
+</script>

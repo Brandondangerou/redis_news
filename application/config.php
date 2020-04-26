@@ -242,4 +242,12 @@ return [
         'var_page'  => 'page',
         'list_rows' => 15,
     ],
+
+    // redis配置
+    'redis' =>  [
+        'host'      =>  '101.200.59.204',
+        'port'      =>  6379,
+        'timeout'   =>  10,
+        'auth'      =>  'arceus'
+    ],
 ];

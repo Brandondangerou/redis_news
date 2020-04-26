@@ -9,13 +9,28 @@ class NewsController extends BaseController
     // 新闻列表
     public function index() {
         // dump(session('admin.user'));
-        $url = url('admin/news/create');
 
-        return '<a href="' . $url . '">添加新闻</a>';
+        // 得到zset中所有的id数据
+        $id_arr = $this->_redis->zrange('news:zset:id',0,-1);
+        // dump($id_arr);
+
+        // 通过id可以得到每条id对应的具体的数据
+        foreach ($id_arr as $id) {
+            // hash的key
+            $key = 'news:id:' . $id;
+            $item = $this->_redis->hgetall($key);
+            $data[] = $item;
+        }
+        // dump($data);
+
+        return view('',compact('data'));
+        // $url = url('admin/news/create');
+        // return '<a href="' . $url . '">添加新闻</a>';
     }
 
     // 新闻显示
     public function create() {
+        // dump(config('redis'));die;
         return view();
     }
 
@@ -34,32 +49,38 @@ class NewsController extends BaseController
             // 表单数据验证
             $this-> error($validate->getError());
         }else{
-            // Redis数据库连接
-            $redis = new \Redis();
-            $redis->connect('101.200.59.204',6379,10);
-            $redis->auth('arceus');
-
             // 得到自增长id值
             $idKey = 'news:id';
-            $id = $redis->incr($idKey);
+            $id = $this->_redis->incr($idKey);
 
-            // 存储对应的id表单信息值
+            // 使用hash存储对应的id表单信息值
             $hKey = 'news:id:' . $id;
+            // 给数据中添加id值
             $data['id'] = $id;
-            $redis->hMset($hKey,$data);
+            $this->_redis->hMset($hKey,$data);
 
             // 把对应的id信息记录在zset中
             $zKey = 'news:zset:id';
-            $redis->zAdd($zKey,$id,$id);
+            $this->_redis->zAdd($zKey,$id,$id);
 
             $this -> success('添加新闻成功！','admin/news/index');
         }
-        // $res = validate($data,$rules);
-        // if($res !== true){
-        //     $this->error($res);
-        // }else{
-        //     dump($data);
-        // }
+    }
 
+    // 删除操作
+    public function del($id) {
+        // 获取删除的id值
+        // $id = input();
+        // return ['id' => $id];
+
+        // 先删除hash对应的key
+        $hKey = 'news:id:' . $id;
+        $this->_redis->del($hKey);
+
+        // 再删除zset数据中的元素
+        $zKey = 'news:zset:id';
+        $this->_redis->zrem($zKey, $id);
+
+        return ['status' => 0, 'msg' => '删除成功'];
     }
 }
