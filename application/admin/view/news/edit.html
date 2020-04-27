@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加新闻</title>
+    <style>
+        body {
+            font-size: 14px;
+        }
+        div {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <form action="{:url('admin/news/update')}" method="post">
+        <input type="hidden" name="id" value="{$data.id}" autocomplete="off">
+        <div>
+            <label>
+                标题：
+                <input type="text" name="title" value="{$data.title}" autocomplete="off">
+            </label>
+        </div>
+        <div>
+            <label>
+                描述：
+                <input type="text" name="desn" value="{$data.desn}" autocomplete="off">
+            </label>
+        </div>
+        <div>
+            <label>
+                作者：
+                <input type="text" name="author" value="{$data.author}" autocomplete="off">
+            </label>
+        </div>
+        <div>
+            <label>
+                内容：
+                <textarea name="body" id="" cols="40" rows="8">{$data.body}</textarea>
+            </label>
+        </div>
+        <input type="submit" value="修改新闻">
+    </form>
+</body>
+</html>
+

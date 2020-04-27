@@ -22,4 +22,5 @@
 
 use think\Route;
 
-Route::get('api/v1/new','api/News/index');
+Route::get('api/v1/new','api/news/index');
+Route::get('api/v1/detail','api/news/detail');

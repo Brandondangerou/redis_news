@@ -33,4 +33,9 @@ class NewsController extends Controller
 
         return api($data);
     }
+
+    public function detail($id) {
+        $new = $this->_redis->hgetall('news:id:' . $id);
+        return api($new);
+    }
 }

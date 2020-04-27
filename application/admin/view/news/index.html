@@ -15,15 +15,24 @@
         table tr td{
             text-align: center;
         }
-        .nav {
-            text-align: right;
-            padding-right: 20px;
-        }
     </style>
 </head>
 <body>
-    <div class="nav">
-        <a href="{:url('admin/news/create')}">添加新闻</a>
+    <div>
+        <div class="nav">
+            <a style="padding-left: 20px;" onclick="delall('{:url('admin/news/delall')}')">删除全部新闻</a>
+            &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+            &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+            &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+            &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+            &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+            &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+            &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+            &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+            <a style="padding-right: 20px;" href="{:url('admin/news/logout')}">退出登录</a>
+            &emsp;
+            <a style="padding-right: 60px;" href="{:url('admin/news/create')}">添加新闻</a>
+        </div>
     </div>
     <hr>
     <div>
@@ -37,24 +46,20 @@
                 <th>操作</th>
             </tr>
             {foreach $data as $v}
-            <tr>
+            <tr class="line">
                 <td>{$v.id}</td>
                 <td>{$v.title}</td>
                 <td>{$v.desn}</td>
                 <td>{$v.author}</td>
                 <td>{$v.body}</td>
                 <td>
-                    <a href="">编辑</a>
-                    <a onclick="del('{:url('admin/news/del',['id' => $v.id])}'),this">删除</a>
+                    <a href="{:url('admin/news/edit',['id' => $v.id])}">编辑</a>
+                    <a onclick="del('{:url('admin/news/del',['id' => $v.id])}',this)">删除</a>
                 </td>
             </tr>
             {/foreach}
         </table>
     </div>
-
-    <form action="" method="post" id="faker" style="display: none">
-        <input type="hidden" name="_method" value="DELETE">
-    </form>
 </body>
 </html>
 
@@ -67,23 +72,24 @@
             $.get(url, function (ret) {
                 // console.log(ret);
                 if(ret.status == 0){
+                    // console.log($(obj).html())
                     $(obj).parents('tr').remove();
-                    // alert(ret.msg);
+                    alert(ret.msg);
                 }
             },'json')
         }
     }
-
-    // $(function(){
-    //     // 给删除按钮绑定点击事件
-    //     $('.del').click(function(){
-    //         if(confirm('确认要删除吗？')){
-    //             var id = $(this).attr('data');
-    //             var url = 'http://' + id;
-    //             $('#faker').attr('action',url);
-    //             // 提交请求
-    //             $('#faker').submit();
-    //         }
-    //     });
-    // });
+    function delall(url) {
+        let bool = confirm('您真的要删除全部的新闻记录吗？');
+        // console.log(bool);
+        if(bool) {
+            $.get(url, function (ret) {
+                // console.log(ret);
+                if(ret.status == 0){
+                    $('tr.line').html('');
+                    alert(ret.msg);
+                }
+            },'json')
+        }
+    }
 </script>

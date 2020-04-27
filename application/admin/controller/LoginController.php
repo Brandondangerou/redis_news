@@ -33,7 +33,27 @@ class LoginController extends Controller
         // 获取key中保存的密码
         $pwd = $redis->get($loginKey);
         if($pwd != $password) {
+            if($redis->exists('news:' . $username . ':count')){
+                $count = $redis->get('news:' . $username . ':count');
+                if($count >= 2){
+                    $redis->set('news:' . $username . ':count',5);
+                    $notallow = $redis->expire('news:' . $username . ':count',120);
+                    if($notallow){
+                        $this->error('密码错误3次，请在120秒后重试');
+                        exit;
+                    }
+                }
+                $redis->incr('news:' . $username . ':count');
+            }else{
+                $redis->set('news:' . $username . ':count',1);
+            }
             return $this->error('登录失败！');
+        }else{
+            $count = $redis->get('news:' . $username . ':count');
+            if($count == 5){
+                $this->error('密码错误3次，请在120秒后重试');
+                exit;
+            }
         }
 
         // 写入到session中
